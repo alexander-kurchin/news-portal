@@ -1,0 +1,50 @@
+source venv/scripts/activate
+cd np && python manage.py shell
+
+from news.models import *
+
+u1 = User.objects.create_user(username='pupa', first_name='Семен', last_name='Пупа')
+u2 = User.objects.create_user(username='lupa', first_name='Захар', last_name='Лупа')
+
+a1 = Author.objects.create(user=u1)
+a2 = Author.objects.create(user=u2)
+
+c1 = Category.objects.create(category='Финансы')
+c2 = Category.objects.create(category='Технологии')
+c3 = Category.objects.create(category='Гайды')
+c4 = Category.objects.create(category='Личный опыт')
+
+p1 = Post.objects.create(author=a1, post_type='article', title='Как я сходил в бухгалтерию', text='Увлекательный рассказ от Семёна Пупы.')
+p2 = Post.objects.create(author=a1, post_type='news', title='В бухгалтерии всё перепутали', text='Захар Лупа получил заработную плату за Семёна Пупу, а Семён Пупа — за Захара Лупу.')
+p3 = Post.objects.create(author=a2, post_type='article', title='Что делать, если зарплату выдали другому', text='Гайд от Захара Лупы, основанный на собственном опыте.')
+
+PostCategory.objects.create(post=p1, category=c1)
+PostCategory.objects.create(post=p1, category=c4)
+PostCategory.objects.create(post=p2, category=c1)
+PostCategory.objects.create(post=p3, category=c3)
+PostCategory.objects.create(post=p3, category=c4)
+
+com1 = Comment.objects.create(post=p1, user=u2, text='Так вот у кого моя зарплата!')
+com2 = Comment.objects.create(post=p2, user=u2, text='Это возмутительно')
+com3 = Comment.objects.create(post=p2, user=u1, text='Я не знаю, что мне теперь делать')
+com4 = Comment.objects.create(post=p3, user=u1, text='Очень познавательно :)')
+
+p1.like()
+p1.dislike()
+p2.like()
+p2.like()
+p3.like()
+com1.dislike()
+com2.like()
+com3.like()
+com4.like()
+
+a1.update_rating()
+a2.update_rating()
+
+Author.objects.all().order_by('-rating').values('user__username', 'rating')[0]
+
+best_post = Post.objects.all().order_by('-rating')[0]
+print(f'Дата: {best_post.created_at.date()}, Автор: {best_post.author}, Рейтинг: {best_post.rating}\nЗаголовок: {best_post.title}\nПревью: {best_post.preview()}')
+
+[print(f'Дата: {c.created_at.date()}, Автор: {c.user}, Рейтинг: {c.rating} Комментарий: {c.text}') for c in Comment.objects.filter(post=best_post)]

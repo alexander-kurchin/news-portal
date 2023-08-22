@@ -1,72 +1,92 @@
+from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Sum
+
+User = get_user_model()
 
 
-"""
-Модель Author
-Модель, содержащая объекты всех авторов.
-Имеет следующие поля:
-cвязь «один к одному» с встроенной моделью пользователей User;
-рейтинг пользователя. Ниже будет дано описание того, как этот рейтинг можно посчитать.
+class Author(models.Model):
+    """Объекты всех авторов"""
 
-Модель Category
-Категории новостей/статей — темы, которые они отражают (спорт, политика, образование и т. д.). Имеет единственное поле: название категории. Поле должно быть уникальным (в определении поля необходимо написать параметр unique = True).
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="author")
+    rating = models.IntegerField(default=0)
 
-Модель Post
-Эта модель должна содержать в себе статьи и новости, которые создают пользователи. Каждый объект может иметь одну или несколько категорий.
-Соответственно, модель должна включать следующие поля:
-связь «один ко многим» с моделью Author;
-поле с выбором — «статья» или «новость»;
-автоматически добавляемая дата и время создания;
-связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory);
-заголовок статьи/новости;
-текст статьи/новости;
-рейтинг статьи/новости.
+    def update_rating(self):
+        """
+        Обновляет рейтинг текущего автора:
+        - суммарный рейтинг каждой статьи автора умножается на 3;
+        - суммарный рейтинг всех комментариев автора;
+        - суммарный рейтинг всех комментариев к статьям автора.
+        """
+        a = Post.objects.filter(author=self).aggregate(Sum('rating'))
+        b = Comment.objects.filter(user=self.user).aggregate(Sum('rating'))
+        c = Post.objects.filter(author=self).aggregate(Sum('rating'))
+        self.rating = 3*a['rating__sum'] + b['rating__sum'] + c['rating__sum']
+        self.save()
 
-Модель PostCategory
-Промежуточная модель для связи «многие ко многим»:
-связь «один ко многим» с моделью Post;
-связь «один ко многим» с моделью Category.
+    def __str__(self):
+        return f"{self.user.first_name} @{self.user.username} {self.user.last_name}"
 
-Модель Comment
-Под каждой новостью/статьёй можно оставлять комментарии, поэтому необходимо организовать их способ хранения тоже.
-Модель будет иметь следующие поля:
-связь «один ко многим» с моделью Post;
-связь «один ко многим» со встроенной моделью User (комментарии может оставить любой пользователь, необязательно автор);
-текст комментария;
-дата и время создания комментария;
-рейтинг комментария.
-"""
 
-"""
-Эти модели должны также реализовать методы:
+class Category(models.Model):
+    """Категории новостей/статей: (спорт, политика, образование и т.д.)"""
 
-Методы like() и dislike() в моделях Comment и Post, которые увеличивают/уменьшают рейтинг на единицу.
-Метод preview() модели Post, который возвращает начало статьи (предварительный просмотр) длиной 124 символа и добавляет многоточие в конце.
-Метод update_rating() модели Author, который обновляет рейтинг текущего автора (метод принимает в качестве аргумента только self).
-Он состоит из следующего:
-суммарный рейтинг каждой статьи автора умножается на 3;
-суммарный рейтинг всех комментариев автора;
-суммарный рейтинг всех комментариев к статьям автора.
-"""
+    category = models.CharField(max_length=64, unique=True)
 
-"""
-В качестве результата задания подготовьте файл, в котором напишете список всех команд, запускаемых в Django shell.
+    def __str__(self):
+        return self.category
 
-Что вы должны сделать в консоли Django?
 
-Создать двух пользователей (с помощью метода User.objects.create_user('username')).
-Создать два объекта модели Author, связанные с пользователями.
-Добавить 4 категории в модель Category.
-Добавить 2 статьи и 1 новость.
-Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
-Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
-Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
-Обновить рейтинги пользователей.
-Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
-Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
-Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
-"""
+class Post(models.Model):
+    """Статьи и новости, которые создают пользователи"""
 
-"""
-Созданное вами приложение вместе с файлом с командами необходимо загрузить в git-репозиторий.
-"""
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="author", related_name="posts")
+    PostType = models.TextChoices("Article", "News")
+    POST_TYPES = [('article', 'Article'), ('news', 'News')]
+    post_type = models.CharField(choices=POST_TYPES, max_length=7, default='article')
+    created_at = models.DateTimeField(auto_now_add=True)
+    category = models.ManyToManyField(Category, through='PostCategory')
+    title = models.CharField(max_length=255)
+    text = models.TextField()
+    rating = models.IntegerField(default=0)
+
+    def like(self):
+        self.rating += 1
+        self.save()
+
+    def dislike(self):
+        self.rating -= 1
+        self.save()
+
+    def preview(self):
+        """Возвращает начало статьи длиной 124 символа и …"""
+
+        return self.text[:124] + "…" if len(self.text) > 124 else self.text[:124]
+
+    def __str__(self):
+        return self.title + "\n" + self.text
+
+
+class PostCategory(models.Model):
+    """Промежуточная модель для связи"""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post", related_name="categories")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, verbose_name="category", null=True, related_name="posts")
+
+
+class Comment(models.Model):
+    """Комментарии пользователей"""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post", related_name="comments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="user", related_name="comments")
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    rating = models.IntegerField(default=0)
+
+    def like(self):
+        self.rating += 1
+        self.save()
+
+    def dislike(self):
+        self.rating -= 1
+        self.save()
