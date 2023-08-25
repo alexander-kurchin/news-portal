@@ -1,0 +1,28 @@
+{% extends 'default.html' %}
+{% load pro_filters %}
+{% load pro_tags %}
+{% block title %} Всё {% endblock %}
+{% block content %}
+    {% autoescape off %}{% header "Все публикации" %}{% endautoescape  %}
+    {% if posts %}
+        {% for post in posts %}
+        <section id="posts" class="posts">
+            <div class="container" data-aos="fade-up">
+                <div class="row g-5">
+                    <div class="col-lg-4 border-start custom-border">
+                        <div class="post-entry-1">
+                            <div class="post-meta"><span>{{ post.post_type }}</span> <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:'d M Y' }}</span></div>
+                            <a href="/news/{{ post.pk }}"><h2>{{ post.title|censor }}</h2></a>
+                            <a href="/news/{{ post.pk }}"><h3>{{ post.text|censor|truncatechars:20 }}</h3></a>
+                            {% if post.rating %}
+                                <div class="post-meta"><span>Рейтинг: {{ post.rating|pretty_rating|safe }}</span></div>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>        
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+

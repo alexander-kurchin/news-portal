@@ -1,0 +1,23 @@
+{% extends 'default.html' %}
+{% load pro_filters %}
+{% block title %} В центре внимания {% endblock %}
+{% block content %}
+    <section class="single-post-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 post-content" data-aos="fade-up">
+                    <div class="single-post">
+                        <div class="post-meta"><span>{{ post.post_type }}</span> <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:'d M Y' }}</span></div>
+                        {% if post.rating %}
+                            <div class="post-meta"><span>Рейтинг: {{ post.rating|pretty_rating|safe }}</span></div>
+                        {% endif %}
+                        <h1 class="mb-5">{{ post.title|censor }}</h1>
+                        <p>{{ post.text|censor|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}
+
+

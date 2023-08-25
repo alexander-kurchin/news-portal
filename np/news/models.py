@@ -41,8 +41,7 @@ class Post(models.Model):
     """Статьи и новости, которые создают пользователи"""
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="author", related_name="posts")
-    PostType = models.TextChoices("Article", "News")
-    POST_TYPES = [('article', 'Article'), ('news', 'News')]
+    POST_TYPES = [('article', 'Статья'), ('news', 'Новость')]
     post_type = models.CharField(choices=POST_TYPES, max_length=7, default='article')
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')

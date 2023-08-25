@@ -1,0 +1,16 @@
+{% extends 'default.html' %}
+{% load pro_tags %}
+{% block title %} Главная {% endblock %}
+{% block content %}
+    {% autoescape off %}{% header "Добро пожаловать!" %}{% endautoescape  %}
+    <section>
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-12 text-center mb-5">
+                    <h1 class="page-title">Это ваш крутой новостной портал</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}
+
