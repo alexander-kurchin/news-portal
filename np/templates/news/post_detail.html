@@ -1,0 +1,44 @@
+{% extends 'default.html' %}
+{% load pro_filters %}
+{% block title %}В центре внимания{% endblock %}
+{% block content %}
+    <section class="single-post-content">
+        <div class="container">
+            <div class="row">
+                <!-- ======= Post ======= -->
+                <div class="col-md-9 post-content" data-aos="fade-up">
+                    <div class="single-post">
+                        <div class="post-meta"><span>{{ post.post_type }}</span> <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:'d M Y' }}</span></div>
+                        {% if post.rating %}
+                            <div class="post-meta"><span>Рейтинг: {{ post.rating|pretty_rating|safe }}</span></div>
+                        {% endif %}
+                        <h1 class="mb-5">{{ post.title|censor }}</h1>
+                        <p>{{ post.text|censor|safe }}</p>
+                        </div>
+                    </div>
+                <!-- ======= Sidebar ======= -->
+                <div class="col-md-3">
+                    <div class="aside-block">
+                        <ul class="nav nav-pills custom-tab-nav mb-4" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pills-actions-tab" data-bs-toggle="pill" data-bs-target="#pills-actions" type="button" role="tab" aria-controls="pills-actions" aria-selected="true">
+                                    Действия
+                                    </button>
+                                </li>
+                            </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-actions" role="tabpanel" aria-labelledby="pills-actions-tab">
+                                <div class="post-entry-1 border-bottom">
+                                    <h2 class="mb-2"><a href="{% url 'post_edit' post.id %}">Редактировать</a></h2>
+                                    </div>
+                                <div class="post-entry-1 border-bottom">
+                                    <h2 class="mb-2"><a href="{{ post.get_absolute_url }}/delete">Удалить</a></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

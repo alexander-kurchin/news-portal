@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+{% load pro_filters %}
+{% load pro_tags %}
+{% block title %}Пилим{% endblock %}
+{% block content %}
+    {% autoescape off %}{% header "Заполните все поля" %}{% endautoescape  %}
+
+    <section id="post-form" class="posts">
+        <div class="container" data-aos="fade-up">
+            <!-- Form -->
+            <div class="form mt-5">
+                <form action="" method="post">
+                    {% csrf_token %}
+	                {{ form.as_p }}
+                    <div class="text-center">
+                        <div class="col-12">
+                            <input type="submit" class="btn btn-primary" value="Сохранить">
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- End Form -->
+            </div>
+        </section>
+
+{% endblock %}

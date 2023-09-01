@@ -1,0 +1,79 @@
+{% extends 'default.html' %}
+{% load pro_filters %}
+{% load pro_tags %}
+{% block title %}Фильтр новостей{% endblock %}
+{% block content %}
+    {% autoescape off %}{% header "Фильтрация" %}{% endautoescape  %}
+
+    <section id="filter" class="posts">
+        <div class="container" data-aos="fade-up">
+
+            <!-- Form -->
+            <div class="form mt-5">
+                <form action="" method="get">
+                    {{ filter.form.as_p }}
+                    <div class="text-center">
+                        <div class="col-12">
+                            <input type="submit" class="btn btn-primary" value="Найти">
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- End Form -->
+            <hr>
+
+            <!-- Search Posts -->
+            <div class="row">
+                <div class="col-md-9">
+                    <h3 class="category-title">Результаты фильтрации</h3>
+                    {% for post in post_list %}
+                        <div class="d-md-flex post-entry-2 small-img">
+                            <div>
+                                <div class="post-meta"><span>{{ post.post_type }}</span> <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:'d M Y' }}</span></div>
+                                <h3><a href="{{ post.get_absolute_url }}">{{ post.title|censor }}</a></h3>
+                                <p><a href="{{ post.get_absolute_url }}">{{ post.text|censor|truncatechars:150|striptags }}</a></p>
+                                {% if post.rating %}
+                                    <div class="post-meta"><span>Рейтинг: {{ post.rating|pretty_rating|safe }}</span></div>
+                                {% endif %}
+                                <div class="d-flex align-items-center author">
+                                    <div class="name">
+                                        <h3 class="m-0 p-0">{{ post.author }}</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    {% empty %}
+                        <div class="d-md-flex post-entry-2 small-img">
+                            <div class="post-meta"><span>Ничего нет</span></div>
+                            </div>
+                    {% endfor %}
+                    </div>
+                </div><!-- End Search Posts -->
+            
+            <!-- Paging -->
+            {% if is_paginated %}
+                <div class="text-start py-4">
+                    <div class="custom-pagination">
+
+                        {% if page_obj.has_previous %}
+                            {% if page_obj.number != 2 %}
+                                <a href="?{% url_replace page=1 %}">&laquo;</a>
+                            {% endif %}
+                            <a href="?{% url_replace page=page_obj.previous_page_number %}" class="prev">{{ page_obj.previous_page_number }}</a>
+                        {% endif %}
+
+                        <a href="#" class="active">{{ page_obj.number }}</a>
+
+                        {% if page_obj.has_next %}
+                            <a href="?{% url_replace page=page_obj.next_page_number %}" class="next">{{ page_obj.next_page_number }}</a>
+                            {% if page_obj.next_page_number != paginator.num_pages %}
+                                <a href="?{% url_replace page=paginator.num_pages %}">&raquo;</a>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                    </div>
+            {% endif %}<!-- End Paging -->
+
+            </div>
+        </section>
+
+{% endblock %}

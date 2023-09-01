@@ -6,11 +6,15 @@ register = template.Library()
 
 @register.filter()
 def pretty_rating(value, param='&#x2B50;'):
+    """ Возвращает красивое представление рейтинга в виде звёзд """
+
     return value * param
 
 
 @register.filter()
 def censor(value):
+    """ Цензурирует баттл-рэп Мирона Фёдорова """
+
     BAD_WORDS = {'Oxxxymiron ': 'O*********',
                  'Говно': 'Г****',
                  'залупа': 'з*****',

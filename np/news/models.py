@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -49,6 +50,9 @@ class Post(models.Model):
     text = models.TextField()
     rating = models.IntegerField(default=0)
 
+    class Meta:
+        ordering = ['-created_at', 'title']
+
     def like(self):
         self.rating += 1
         self.save()
@@ -63,7 +67,10 @@ class Post(models.Model):
         return self.text[:124] + "…" if len(self.text) > 124 else self.text[:124]
 
     def __str__(self):
-        return self.title + "\n" + self.text
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
