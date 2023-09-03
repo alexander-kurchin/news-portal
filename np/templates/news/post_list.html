@@ -11,21 +11,14 @@
                 <!-- Posts -->
                 <div class="col-lg-8 border-start custom-border">
                     {% for post in post_list %}
-                        <div class="post-entry-1">
-                            <div class="post-meta"><span>{{ post.post_type }}</span> <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:'d M Y' }}</span></div>
-                            <a href="{{ post.get_absolute_url }}"><h2>{{ post.title|censor }}</h2></a>
-                            <a href="{{ post.get_absolute_url }}"><h3>{{ post.text|censor|truncatewords:10|striptags }}</h3></a>
-                            {% if post.rating %}
-                                <div class="post-meta"><span>Рейтинг: {{ post.rating|pretty_rating|safe }}</span></div>
-                            {% endif %}
-                            </div>
+                        {% include "post_item.html" with post=post %}
                     {% empty %}
                         <div class="post-entry-1">
                             <div class="post-meta"><span>Ничего нет</span></div>
                             </div>
                     {% endfor %}
                     </div><!-- End Posts -->
-                <!-- ======= Sidebar ======= -->
+                <!-- Sidebar -->
                 <div class="col-md-3">
                     <div class="aside-block">
                         <ul class="nav nav-pills custom-tab-nav mb-4" id="pills-tab" role="tablist">
@@ -47,26 +40,7 @@
                 </div>
             <!-- Paging -->
             {% if is_paginated %}
-                <div class="text-start py-4">
-                    <div class="custom-pagination">
-
-                        {% if page_obj.has_previous %}
-                            {% if page_obj.number != 2 %}
-                                <a href="?page=1">&laquo;</a>
-                            {% endif %}
-                            <a href="?page={{ page_obj.previous_page_number }}" class="prev">{{ page_obj.previous_page_number }}</a>
-                        {% endif %}
-
-                        <a href="#" class="active">{{ page_obj.number }}</a>
-
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}" class="next">{{ page_obj.next_page_number }}</a>
-                            {% if page_obj.next_page_number != paginator.num_pages %}
-                                <a href="?page={{ paginator.num_pages }}">&raquo;</a>
-                            {% endif %}
-                        {% endif %}
-                        </div>
-                    </div>
+                {% include "paginator.html" with page_obj=page_obj paginator=paginator%}
             {% endif %}<!-- End Paging -->
             </div>
         </section>

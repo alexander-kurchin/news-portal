@@ -18,13 +18,4 @@ urlpatterns = [path('', views.index, name='home'),
                path('post_<int:pk>', views.PostDetail.as_view(), name='post_detail'),
                path('post_<int:pk>/edit', views.PostUpdate.as_view(), name='post_edit'),
                path('post_<int:pk>/delete', views.PostDelete.as_view(), name='post_delete'),
-
-               # На случай тестов
-               path('news/<int:pk>', views.PostDetail.as_view()),
-               path('news/<int:pk>/edit', views.PostUpdate.as_view()),
-               path('news/<int:pk>/delete', views.PostDelete.as_view()),
-
-               path('articles/<int:pk>', views.PostDetail.as_view()),
-               path('articles/<int:pk>/edit', views.PostUpdate.as_view()),
-               path('articles/<int:pk>/delete', views.PostDelete.as_view()),
                ]

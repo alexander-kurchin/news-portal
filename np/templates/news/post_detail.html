@@ -32,7 +32,7 @@
                                     <h2 class="mb-2"><a href="{% url 'post_edit' post.id %}">Редактировать</a></h2>
                                     </div>
                                 <div class="post-entry-1 border-bottom">
-                                    <h2 class="mb-2"><a href="{{ post.get_absolute_url }}/delete">Удалить</a></h2>
+                                    <h2 class="mb-2"><a href="{% url 'post_delete' post.id %}">Удалить</a></h2>
                                     </div>
                                 </div>
                             </div>
