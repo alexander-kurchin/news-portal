@@ -12,7 +12,7 @@
                 <div class="col-md-9">
                     <h3 class="category-title">Результаты фильтрации</h3>
                     {% for post in post_list %}
-                        {% include "post_item.html" with post=post %}
+                        {% include "news/post_item.html" with post=post %}
                     {% empty %}
                         <div class="d-md-flex post-entry-2 small-img">
                             <div class="post-meta"><span>Ничего нет</span></div>

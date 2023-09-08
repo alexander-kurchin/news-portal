@@ -4,8 +4,8 @@
 <div class="post-entry-1">
     <div class="post-meta"><span>{{ post.post_type }}</span> <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:'d M Y' }}</span></div>
 
-    <a href="{{ post.get_absolute_url }}"><h2>{{ post.title|censor }}</h2></a>
-    <a href="{{ post.get_absolute_url }}"><h3>{{ post.text|censor|truncatewords:10|striptags }}</h3></a>
+    <a href="{% url 'post_detail' post.pk %}"><h2>{{ post.title|censor }}</h2></a>
+    <a href="{% url 'post_detail' post.pk %}"><h3>{{ post.text|censor|truncatewords:10|striptags }}</h3></a>
 
     <div class="post-meta">
         <div><span>{% if post.rating %}Рейтинг: {{ post.rating|pretty_rating|safe }}{% else %}Рейтинга нет{% endif %}</span></div>

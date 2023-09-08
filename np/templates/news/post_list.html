@@ -11,7 +11,7 @@
                 <!-- Posts -->
                 <div class="col-lg-8 border-start custom-border">
                     {% for post in post_list %}
-                        {% include "post_item.html" with post=post %}
+                        {% include "news/post_item.html" with post=post %}
                     {% empty %}
                         <div class="post-entry-1">
                             <div class="post-meta"><span>Ничего нет</span></div>
