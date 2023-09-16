@@ -1,14 +1,13 @@
 {% extends 'default.html' %}
-{% load pro_filters %}
 {% load pro_tags %}
 {% block title %}Фильтр новостей{% endblock %}
 {% block content %}
-    {% autoescape off %}{% header "Фильтрация" %}{% endautoescape  %}
+    {% autoescape off %}{% header "Фильтрация" %}{% endautoescape %}
 
     <section id="filter" class="posts">
         <div class="container" data-aos="fade-up">
             <div class="row">
-                <!-- Search Posts -->
+                <!-- Filtered Posts -->
                 <div class="col-md-9">
                     <h3 class="category-title">Результаты фильтрации</h3>
                     {% for post in post_list %}
@@ -18,7 +17,7 @@
                             <div class="post-meta"><span>Ничего нет</span></div>
                             </div>
                     {% endfor %}
-                    </div><!-- End Search Posts -->
+                    </div><!-- End Filtered Posts -->
                 
                 <!-- Sidebar -->
                 <div class="col-md-3">
@@ -48,7 +47,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div><!-- End Sidebar -->
                 </div>
 
             <!-- Paging -->

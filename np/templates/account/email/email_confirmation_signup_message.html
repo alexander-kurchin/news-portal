@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Portal</title>
+</head>
+<body>
+    {% load account %}
+    <h1>Респект за регистрацию, @{{ user.username }}!</h1>
+    <h3>Пожалуйста, следуй за <a href="{{ activate_url }}">белым кроликом</a>.</h3>
+</body>
+</html>

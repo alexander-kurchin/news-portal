@@ -19,4 +19,8 @@ urlpatterns = [path('', views.HomeView.as_view(), name='home'),
                path('post_<int:pk>', views.PostDetail.as_view(), name='post_detail'),
                path('post_<int:pk>/edit', views.PostUpdate.as_view(), name='post_edit'),
                path('post_<int:pk>/delete', views.PostDelete.as_view(), name='post_delete'),
+
+               path('categories/', views.CategoryList.as_view(), name='all_categories'),
+               path('category_<int:pk>', views.PostCategoryList.as_view(), name='category'),
+               path('category_<int:pk>/subscribe', views.CategorySubscribe.as_view(), name='subscribe'),
                ]

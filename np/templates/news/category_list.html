@@ -1,0 +1,24 @@
+{% extends 'default.html' %}
+{% load pro_tags %}
+{% block title %}Каторга{% endblock %}
+{% block content %}
+    {% autoescape off %}{% header "Все категории" %}{% endautoescape %}
+
+    <section id="category">
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-8">
+                    {% for category in category_list %}
+                        <div class="post-entry-1">
+                            <a href="{% url 'category' category.pk %}"><h2 class="category-title">{{ category }}</h2></a>
+                            </div>
+                    {% empty %}
+                        <div class="post-entry-1">
+                            <div class="post-meta"><span>Ничего нет</span></div>
+                            </div>
+                    {% endfor %}
+                    </div>
+            </div>
+        </section>
+
+{% endblock %}

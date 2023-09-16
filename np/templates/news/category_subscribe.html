@@ -1,0 +1,30 @@
+{% extends 'default.html' %}
+{% load pro_tags %}
+{% block title %}Письмошная{% endblock %}
+{% block content %}
+    {% autoescape off %}{% header "Подписка на обновления в категории «"|add:category.category|add:"»" %}{% endautoescape %}
+    <section>
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-12 text-center mb-5">
+                    {% if is_not_subscriber %}
+                        {% if user_has_email %}
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="text-center">
+                                    <div class="col-12">
+                                        <input type="submit" class="btn btn-primary" value="Подписаться!">
+                                        </div>
+                                    </div>
+                                </form>
+                        {% else %}
+                            <h1 class="page-title">Вы не указали e-mail!</h1>
+                        {% endif %}
+                    {% else %}
+                        <h1 class="page-title">Вы подписаны на категорию «{{ category.category }}»</h1>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

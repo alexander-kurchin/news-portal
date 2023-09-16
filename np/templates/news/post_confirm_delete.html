@@ -1,11 +1,10 @@
 {% extends 'default.html' %}
-{% load pro_filters %}
 {% load pro_tags %}
 {% block title %}Аннигиляция{% endblock %}
 {% block content %}
-    {% autoescape off %}{% header "Удаление" %}{% endautoescape  %}
+    {% autoescape off %}{% header "Удаление" %}{% endautoescape %}
 
-    <section id="post-form" class="posts">
+    <section id="post-delete" class="posts">
         <div class="container" data-aos="fade-up">
             <!-- Form -->
             <div class="form mt-5">

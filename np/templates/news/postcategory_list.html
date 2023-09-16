@@ -1,22 +1,22 @@
 {% extends 'default.html' %}
 {% load pro_tags %}
-{% block title %}Всё{% endblock %}
+{% block title %}Каторга{% endblock %}
 {% block content %}
-    {% autoescape off %}{% header "Все публикации" %}{% endautoescape %}
+    {% autoescape off %}{% header "Записи в категории «"|add:category.category|add:"»" %}{% endautoescape %}
 
-    <section id="posts" class="posts">
+    <section id="postcategory" class="posts">
         <div class="container" data-aos="fade-up">
             <div class="row">
-                <!-- Posts -->
+                <!-- Category Posts -->
                 <div class="col-md-9">
-                    {% for post in post_list %}
-                        {% include "news/post_item.html" with post=post %}
+                    {% for postcategory in postcategory_list %}
+                        {% include "news/post_item.html" with post=postcategory.post %}
                     {% empty %}
                         <div class="post-entry-1">
                             <div class="post-meta"><span>Ничего нет</span></div>
                             </div>
                     {% endfor %}
-                    </div><!-- End Posts -->
+                    </div><!-- End Category Posts -->
                 <!-- Sidebar -->
                 <div class="col-md-3">
                     <div class="aside-block">
@@ -30,13 +30,12 @@
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-actions" role="tabpanel" aria-labelledby="pills-actions-tab">
                                 <div class="post-entry-1 border-bottom">
-                                    <h2 class="mb-2"><a href="./create">Создать новый пост</a></h2>
+                                    <h2 class="mb-2"><a href="{% url 'subscribe' category.pk %}">Подписаться на обновления в категории «{{ category.category }}»</a></h2>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div><!-- End Sidebar -->
-                </div>
             <!-- Paging -->
             {% if is_paginated %}
                 {% include "paginator.html" with page_obj=page_obj paginator=paginator%}

@@ -8,7 +8,9 @@ register = template.Library()
 def header(title='Привет!'):
     """Создаёт красивый заголовок h1"""
 
-    section = f'<section class="category-section"><div class="container"><div class="section-header d-flex justify-content-between align-items-center mb-5"><h1>{title}</h1></div></div></section>'
+    section = (f'<section class="category-section"><div class="container">'
+               f'<div class="section-header d-flex justify-content-between align-items-center mb-5">'
+               f'<h1>{title}</h1></div></div></section>')
     return section
 
 

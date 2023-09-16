@@ -33,6 +33,10 @@ class Category(models.Model):
     """Категории новостей/статей: (спорт, политика, образование и т.д.)"""
 
     category = models.CharField(max_length=64, unique=True)
+    subscribers = models.ManyToManyField(User, through='CategoryUser')
+
+    class Meta:
+        ordering = ['category']
 
     def __str__(self):
         return self.category
@@ -61,7 +65,7 @@ class Post(models.Model):
         self.rating -= 1
         self.save()
 
-    def preview(self):
+    def preview(self):  # TODO: Убрать за ненадобностью
         """Возвращает начало статьи длиной 124 символа и …"""
 
         return self.text[:124] + "…" if len(self.text) > 124 else self.text[:124]
@@ -78,6 +82,16 @@ class PostCategory(models.Model):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post", related_name="categories")
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, verbose_name="category", null=True, related_name="posts")
+
+    class Meta:
+        ordering = ['post']
+
+
+class CategoryUser(models.Model):
+    """Промежуточная модель для связи"""
+
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="category")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="user", related_name="categories")
 
 
 class Comment(models.Model):

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load pro_filters %}
+<html lang="ru">
+    <head>
+            <meta charset="utf-8">
+            <meta content="width=device-width, initial-scale=1.0" name="viewport">
+            <title>Еженедельный Дайджест</title>   
+        </head>
+    <body>
+        <h1>Здравствуй, @{{ user }}. Новое за прошедшую неделю:</h1>
+        {% for post in posts %}
+            <a href="http://127.0.0.1:8000{% url 'post_detail' post.pk %}">{{ post.title|censor }}</a><br>
+        {% endfor %}
+        </body>
+
+</html>

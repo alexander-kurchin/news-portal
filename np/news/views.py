@@ -1,5 +1,6 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, FormView,
                                   ListView, TemplateView, UpdateView)
@@ -7,13 +8,18 @@ from django_filters.views import FilterView
 
 from .filters import PostFilterSet
 from .forms import PostForm
-from .models import Author, Post, User
+from .models import Author, Category, CategoryUser, Post, PostCategory, User
+
+
+class HomeView(TemplateView):
+    template_name = 'index.html'
 
 
 class PostList(ListView):
     model = Post
     paginate_by = 10
 
+    # TODO: Может быть правильнее переопределить def get_queryset()
     def get(self, request, *args, **kwargs):
         post_type = kwargs['post_type']
         self.queryset = Post.objects.filter(post_type=post_type)
@@ -58,5 +64,43 @@ class PostDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('home')
 
 
-class HomeView(TemplateView):
-    template_name = 'index.html'
+class CategoryList(ListView):
+    model = Category
+
+
+# TODO: Может быть сделать через (SingleObjectMixin, ListView)
+class PostCategoryList(ListView):
+    model = PostCategory
+    paginate_by = 10
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = PostCategory.objects.filter(category=kwargs['pk']).distinct()
+        self.category_pk = kwargs['pk']
+        return super(PostCategoryList, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.get(pk=self.category_pk)
+        return context
+
+
+class CategorySubscribe(LoginRequiredMixin, TemplateView):
+    template_name = 'news/category_subscribe.html'
+
+    def get(self, request, *args, **kwargs):
+        self.category = get_object_or_404(Category, pk=kwargs['pk'])
+        self.user = get_object_or_404(User, username=request.user.username)
+        return super(CategorySubscribe, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_subscriber'] = not CategoryUser.objects.filter(category=self.category, user=self.user).exists()
+        context['user_has_email'] = self.request.user.email
+        context['category'] = self.category
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.category = get_object_or_404(Category, pk=kwargs['pk'])
+        self.user = get_object_or_404(User, username=request.user.username)
+        CategoryUser.objects.get_or_create(category=self.category, user=self.user)
+        return redirect('subscribe', pk=self.category.pk)

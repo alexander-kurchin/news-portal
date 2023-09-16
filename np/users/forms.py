@@ -9,4 +9,4 @@ class BasicSignupForm(SignupForm):
         default_group.user_set.add(user)
         return user
 
-# TODO Автодобавление в группу при регистрации через социальные медиа
+# TODO: Автодобавление в группу при регистрации через социальные медиа

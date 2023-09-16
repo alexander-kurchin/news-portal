@@ -7,7 +7,7 @@ from .models import Category, Post
 
 class PostFilterSet(FilterSet):
     title = CharFilter(field_name='title',
-                       lookup_expr='icontains',  # TODO Делает 'contains'
+                       lookup_expr='icontains',  # TODO: Делает 'contains'
                        label='Название содержит',
                        widget=forms.TextInput(attrs={'class': 'form-control'}),
                        )
@@ -20,7 +20,7 @@ class PostFilterSet(FilterSet):
     after = DateFilter(field_name='created_at',
                        lookup_expr='date__gt',
                        label='Опубликовано после',
-                       widget=forms.DateInput(attrs={'type': 'date',  # TODO Русский формат 'дд-мм-ггг'
+                       widget=forms.DateInput(attrs={'type': 'date',  # TODO: Русский формат 'дд-мм-ггг'
                                                      'class': 'form-control'}),
                        )
 
