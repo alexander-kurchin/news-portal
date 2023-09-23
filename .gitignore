@@ -155,3 +155,9 @@ cython_debug/
 celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir
+
+# Cache
+cache_files/
+
+# Redis
+*.rdb

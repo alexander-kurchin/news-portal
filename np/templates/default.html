@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% load static %}
+{% load cache %}
 
 <html lang="ru">
 
@@ -33,14 +34,18 @@
   </head>
 
 <body>
-  {% include 'header.html' %}
+  {% cache 300 header %}
+    {% include 'header.html' %}
+  {% endcache %}
 
   <main id="main">
     {% block content %}
     {% endblock %}
     </main>
 
-  {% include 'footer.html' %}
+  {% cache 300 footer %}
+    {% include 'footer.html' %}
+  {% endcache %}
   </body>
 
 </html>
